@@ -1,0 +1,38 @@
+<div style="background:#fff; border-radius:12px; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.1); max-width:100%; margin:10px auto; font-family:sans-serif;">
+  <h3 style="color:#0077cc; text-align:center;">Meta Tag Analyzer</h3>
+  <input type="text" id="urlInput" placeholder="Enter a URL" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;">
+  <button onclick="analyzeMeta()" style="width:100%; padding:10px; background:#0077cc; color:#fff; border:none; border-radius:8px;">Analyze</button>
+  <div id="metaResults" style="margin-top:15px; max-height:300px; overflow-y:auto;"></div>
+</div>
+
+<script>
+  async function analyzeMeta() {
+    const url = document.getElementById('urlInput').value;
+    const resultsDiv = document.getElementById("metaResults");
+    resultsDiv.innerHTML = "Loading...";
+    if (!url.startsWith('http')) {
+      resultsDiv.innerHTML = "<p style='color:red;'>Please enter a valid http/https URL.</p>";
+      return;
+    }
+    try {
+      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+      const data = await res.json();
+      const html = new DOMParser().parseFromString(data.contents, 'text/html');
+      const title = html.querySelector('title')?.textContent || "Not found";
+      const tags = html.getElementsByTagName("meta");
+
+      let output = `<p><strong>Title:</strong> ${title}</p><table style='width:100%; border-collapse:collapse;'><tr><th style='text-align:left;'>Tag</th><th style='text-align:left;'>Content</th></tr>`;
+      for (let tag of tags) {
+        const name = tag.getAttribute("name") || tag.getAttribute("property");
+        const content = tag.getAttribute("content");
+        if (name && content) {
+          output += `<tr><td style='padding:5px; border-bottom:1px solid #ddd;'>${name}</td><td style='padding:5px; border-bottom:1px solid #ddd;'>${content}</td></tr>`;
+        }
+      }
+      output += "</table>";
+      resultsDiv.innerHTML = output;
+    } catch (err) {
+      resultsDiv.innerHTML = "<p style='color:red;'>Error fetching URL. CORS might be blocking it.</p>";
+    }
+  }
+</script>
