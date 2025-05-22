@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regex Tester</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #004c99;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .output {
+      background: #f0faff;
+      padding: 10px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+    .highlight {
+      background-color: yellow;
+      color: black;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Regex Tester</h2>
+    <input type="text" id="regexInput" placeholder="Enter regex (e.g. \\d+)" />
+    <textarea id="textInput" rows="6" placeholder="Enter text to test..."></textarea>
+    <div id="errorMsg" class="error"></div>
+    <h3>Matched Output:</h3>
+    <div id="output" class="output"></div>
+  </div>
+
+  <script>
+    const regexInput = document.getElementById("regexInput");
+    const textInput = document.getElementById("textInput");
+    const output = document.getElementById("output");
+    const errorMsg = document.getElementById("errorMsg");
+
+    function highlightMatches() {
+      const pattern = regexInput.value;
+      const text = textInput.value;
+      try {
+        const regex = new RegExp(pattern, 'gi');
+        const highlighted = text.replace(regex, match => `<span class="highlight">${match}</span>`);
+        output.innerHTML = highlighted || "<i>No match found</i>";
+        errorMsg.textContent = "";
+      } catch (e) {
+        output.innerHTML = "";
+        errorMsg.textContent = "Invalid regex: " + e.message;
+      }
+    }
+
+    regexInput.addEventListener("input", highlightMatches);
+    textInput.addEventListener("input", highlightMatches);
+  </script>
+</body>
+</html>
