@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Converter Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f7ff;
+      color: #003366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    input[type="file"], select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Document Converter</h2>
+    <input type="file" id="docInput" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx">
+    <select id="convertTo">
+      <option value="pdf">Convert to PDF</option>
+      <option value="doc">Convert to DOC</option>
+      <option value="ppt">Convert to PPT</option>
+      <option value="txt">Convert to TXT</option>
+    </select>
+    <button onclick="convertDocument()">Convert</button>
+    <p id="status"></p>
+  </div>  <script>
+    function convertDocument() {
+      const file = document.getElementById('docInput').files[0];
+      const convertTo = document.getElementById('convertTo').value;
+      const status = document.getElementById('status');
+
+      if (!file) {
+        status.textContent = 'Please select a document file.';
+        return;
+      }
+
+      status.innerHTML = 'Redirecting to document conversion tool...';
+      let url = 'https://www.ilovepdf.com';
+      switch (convertTo) {
+        case 'pdf':
+          url = 'https://www.ilovepdf.com/word_to_pdf';
+          break;
+        case 'doc':
+          url = 'https://www.ilovepdf.com/pdf_to_word';
+          break;
+        case 'ppt':
+          url = 'https://www.ilovepdf.com/pdf_to_powerpoint';
+          break;
+        case 'txt':
+          url = 'https://www.zamzar.com/convert/pdf-to-txt/';
+          break;
+      }
+      window.open(url, '_blank');
+    }
+  </script></body>
+</html>
