@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF ↔ Word Converter Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f7ff;
+      color: #003366;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    input[type="file"], button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>PDF ↔ Word Converter</h2>
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
+    <button onclick="convertFile()">Convert</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function convertFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      const status = document.getElementById('status');
+
+      if (!file) {
+        status.textContent = 'Please select a PDF or Word file.';
+        return;
+      }
+
+      const fileName = file.name.toLowerCase();
+      const isPDF = fileName.endsWith('.pdf');
+      const isWord = fileName.endsWith('.doc') || fileName.endsWith('.docx');
+
+      if (isPDF) {
+        status.innerHTML = 'Redirecting to
