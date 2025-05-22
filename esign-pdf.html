@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF E-Sign Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f7ff;
+      color: #003366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background-color: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    input[type="file"], button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>E-Sign PDF Tool</h2>
+    <input type="file" id="pdfInput" accept="application/pdf">
+    <button onclick="esignPDF()">E-Sign PDF</button>
+    <p id="status"></p>
+  </div>  <script>
+    function esignPDF() {
+      const file = document.getElementById("pdfInput").files[0];
+      const status = document.getElementById("status");
+
+      if (!file) {
+        status.textContent = "Please upload a PDF file.";
+        return;
+      }
+
+      status.textContent = "Redirecting to E-Sign tool...";
+      window.open("https://www.ilovepdf.com/sign_pdf", "_blank");
+    }
+  </script></body>
+</html>
