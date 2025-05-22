@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UUID Generator</title>
+  <style>
+    body {
+      background-color: #e6f7ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #003366;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+
+    #uuid {
+      word-break: break-all;
+      background: #f0faff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 18px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    button {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>UUID Generator</h2>
+    <div id="uuid">Click the button to generate a UUID</div>
+    <button onclick="generateUUID()">Generate UUID</button>
+    <button onclick="copyUUID()">Copy UUID</button>
+  </div>
+
+  <script>
+    function generateUUID() {
+      const uuid = URL.createObjectURL(new Blob()).split('/').pop();
+      document.getElementById('uuid').textContent = uuid;
+    }
+
+    function copyUUID() {
+      const text = document.getElementById('uuid').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('UUID copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
