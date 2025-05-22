@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contrast Checker</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .preview {
+      margin-top: 20px;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    .results {
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .results span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contrast Checker</h2>
+
+    <label for="textColor">Text Color:</label>
+    <input type="color" id="textColor" value="#000000" />
+
+    <label for="bgColor">Background Color:</label>
+    <input type="color" id="bgColor" value="#ffffff" />
+
+    <div class="preview" id="preview">
+      Sample Text Preview
+    </div>
+
+    <div class="results" id="results">
+      Contrast Ratio: <span id="ratio">--</span><br>
+      Normal Text: <span id="normalStatus">--</span><br>
+      Large Text: <span id="largeStatus">--</span>
+    </div>
+  </div>
+
+  <script>
+    const textColorInput = document.getElementById("textColor");
+    const bgColorInput = document.getElementById("bgColor");
+    const preview = document.getElementById("preview");
+    const ratioOutput = document.getElementById("ratio");
+    const normalStatus = document.getElementById("normalStatus");
+    const largeStatus = document.getElementById("largeStatus");
+
+    function getLuminance(hex) {
+      let rgb = hex.replace("#", "").match(/.{2}/g).map(val => parseInt(val, 16) / 255);
+      rgb = rgb.map(val => val <= 0.03928 ? val / 12.92 : Math.pow(((val + 0.055) / 1.055), 2.4));
+      return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+    }
+
+    function getContrast(hex1, hex2) {
+      const lum1 = getLuminance(hex1);
+      const lum2 = getLuminance(hex2);
+      const brightest = Math.max(lum1, lum2);
+      const darkest = Math.min(lum1, lum2);
+      return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
+    }
+
+    function update() {
+      const textHex = textColorInput.value;
+      const bgHex = bgColorInput.value;
+      const contrast = parseFloat(getContrast(textHex, bgHex));
+      preview.style.color = textHex;
+      preview.style.backgroundColor = bgHex;
+
+      ratioOutput.textContent = contrast;
+
+      normalStatus.textContent = contrast >= 4.5 ? "Pass (AA)" : "Fail";
+      largeStatus.textContent = contrast >= 3 ? "Pass (AA)" : "Fail";
+    }
+
+    textColorInput.addEventListener("input", update);
+    bgColorInput.addEventListener("input", update);
+
+    update(); // Initial call
+  </script>
+</body>
+</html>
