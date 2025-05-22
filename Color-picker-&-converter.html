@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Color Picker & Converter</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #003366;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 60px;
+      border: none;
+      border-radius: 8px;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+
+    .color-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .color-box {
+      background: #f0faff;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    button.copy-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.copy-btn:hover {
+      background: #0056b3;
+    }
+
+    @media(max-width: 600px) {
+      .color-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Color Picker & Converter</h2>
+    <input type="color" id="colorPicker" value="#00aaff" />
+    <div class="color-info">
+      <div class="color-box">
+        HEX: <span id="hexValue">#00aaff</span>
+        <button class="copy-btn" onclick="copyText('hexValue')">Copy</button>
+      </div>
+      <div class="color-box">
+        RGB: <span id="rgbValue">rgb(0, 170, 255)</span>
+        <button class="copy-btn" onclick="copyText('rgbValue')">Copy</button>
+      </div>
+      <div class="color-box">
+        HSL: <span id="hslValue">hsl(195, 100%, 50%)</span>
+        <button class="copy-btn" onclick="copyText('hslValue')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const colorPicker = document.getElementById("colorPicker");
+    const hexValue = document.getElementById("hexValue");
+    const rgbValue = document.getElementById("rgbValue");
+    const hslValue = document.getElementById("hslValue");
+
+    colorPicker.addEventListener("input", () => {
+      const hex = colorPicker.value;
+      hexValue.textContent = hex;
+      const rgb = hexToRgb(hex);
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      rgbValue.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+      hslValue.textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+    });
+
+    function hexToRgb(hex) {
+      let bigint = parseInt(hex.slice(1), 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+      return { r, g, b };
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      let max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h = Math.round(h * 60);
+      }
+      return { h: h || 0, s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text);
+      alert(`Copied: ${text}`);
+    }
+  </script>
+</body>
+</html
