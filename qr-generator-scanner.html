@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Generator & Scanner</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #003366;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #0077cc;
+      color: white;
+      border: none;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    canvas, video {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #qr-reader {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      input, button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>QR Code Generator</h2>
+    <input type="text" id="qrInput" placeholder="Enter text or URL" />
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <canvas id="qrCanvas"></canvas>
+
+    <hr style="margin:30px 0;">
+
+    <h2>QR Code Scanner</h2>
+    <div id="qr-reader"></div>
+    <p><strong>Scanned Text:</strong> <span id="scanResult">None</span></p>
+  </div>
+
+  <script>
+    function generateQRCode() {
+      const input = document.getElementById("qrInput").value;
+      if (!input) return alert("Please enter text or URL.");
+      QRCode.toCanvas(document.getElementById("qrCanvas"), input, function (error) {
+        if (error) console.error(error);
+      });
+    }
+
+    function startQRScanner() {
+      const qrReader = new Html5Qrcode("qr-reader");
+      qrReader.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        qrCodeMessage => {
+          document.getElementById("scanResult").textContent = qrCodeMessage;
+          qrReader.stop();
+        },
+        error => { }
+      ).catch(err => console.error(err));
+    }
+
+    // Auto-start scanner on page load
+    window.onload = startQRScanner;
+  </script>
+</body>
+</html>
