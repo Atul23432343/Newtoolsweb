@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Merger & Splitter Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f7ff;
+      color: #003366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+    input[type="file"], button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>PDF Merger & Splitter</h2>
+    <input type="file" id="pdfInput" multiple accept="application/pdf">
+    <button onclick="mergePDFs()">Merge PDFs</button>
+    <button onclick="splitPDF()">Split PDF</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function mergePDFs() {
+      const files = document.getElementById('pdfInput').files;
+      const status = document.getElementById('status');
+      if (!files.length) {
+        status.textContent = 'Please select PDF files to merge.';
+        return;
+      }
+      status.innerHTML = 'Redirecting to online PDF merger...';
+      window.open('https://www.ilovepdf.com/merge_pdf', '_blank');
+    }
+
+    function splitPDF() {
+      const files = document.getElementById('pdfInput').files;
+      const status = document.getElementById('status');
+      if (!files.length) {
+        status.textContent = 'Please select a PDF file to split.';
+        return;
+      }
+      status.innerHTML = 'Redirecting to online PDF splitter...';
+      window.open('https://www.ilovepdf.com/split_pdf', '_blank');
+    }
+  </script>
+</body>
+</html>
