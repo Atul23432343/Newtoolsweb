@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Text Encryptor & Decryptor</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+    textarea, input {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #output {
+      margin-top: 20px;
+      background: #f0faff;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      font-size: 16px;
+      color: #003366;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-group button {
+      flex: 1 1 45%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Text Encryptor & Decryptor</h2>
+    <textarea id="inputText" placeholder="Enter text here..."></textarea>
+    <input type="text" id="key" placeholder="Enter secret key (e.g., 1234)" />
+
+    <button onclick="encryptText()">Encrypt</button>
+    <button onclick="decryptText()">Decrypt</button>
+
+    <div class="btn-group">
+      <button onclick="copyOutput()">Copy Output</button>
+      <button onclick="clearFields()">Clear</button>
+    </div>
+
+    <div id="output" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function xorCipher(text, key) {
+      let output = '';
+      for (let i = 0; i < text.length; i++) {
+        output += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      return output;
+    }
+
+    function encryptText() {
+      const text = document.getElementById('inputText').value;
+      const key = document.getElementById('key').value;
+      if (!text || !key) return alert('Please enter both text and key.');
+
+      const encrypted = btoa(xorCipher(text, key));
+      document.getElementById('output').textContent = encrypted;
+    }
+
+    function decryptText() {
+      const encrypted = document.getElementById('inputText').value;
+      const key = document.getElementById('key').value;
+      if (!encrypted || !key) return alert('Please enter both encrypted text and key.');
+
+      try {
+        const decoded = atob(encrypted);
+        const decrypted = xorCipher(decoded, key);
+        document.getElementById('output').textContent = decrypted;
+      } catch {
+        alert('Invalid encrypted text or key.');
+      }
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert('Output copied to clipboard!');
+      });
+    }
+
+    function clearFields() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('key').value = '';
+      document.getElementById('output').textContent = '';
+    }
+  </script>
+</body>
+</html>
