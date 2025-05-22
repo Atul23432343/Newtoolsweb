@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Time Zone Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #003366;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      color: #0077cc;
+    }
+    @media (max-width: 600px) {
+      input, select, button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Time Zone Converter</h2>
+    <label for="timeInput">Select Time (or leave blank for current time)</label>
+    <input type="datetime-local" id="timeInput">
+    
+    <label for="fromZone">From Time Zone:</label>
+    <select id="fromZone"></select>
+
+    <label for="toZone">To Time Zone:</label>
+    <select id="toZone"></select>
+
+    <button onclick="convertTime()">Convert</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const timeZones = Intl.supportedValuesOf('timeZone');
+
+    const fromSelect = document.getElementById("fromZone");
+    const toSelect = document.getElementById("toZone");
+
+    timeZones.forEach(tz => {
+      const option1 = document.createElement("option");
+      const option2 = document.createElement("option");
+      option1.value = option2.value = tz;
+      option1.text = option2.text = tz;
+      fromSelect.add(option1);
+      toSelect.add(option2);
+    });
+
+    // Set defaults
+    fromSelect.value = "UTC";
+    toSelect.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    function convertTime() {
+      const from = fromSelect.value;
+      const to = toSelect.value;
+      const timeInput = document.getElementById("timeInput").value;
+
+      let date = timeInput ? new Date(timeInput) : new Date();
+      const utcDate = new Date(date.toLocaleString("en-US", { timeZone: from }));
+      const converted = new Date(utcDate.toLocaleString("en-US", { timeZone: to }));
+
+      document.getElementById("output").innerText =
+        `Converted Time: ${converted.toLocaleString()} (${to})`;
+    }
+  </script>
+</body>
+</html>
