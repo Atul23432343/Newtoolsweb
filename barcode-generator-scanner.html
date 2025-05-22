@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barcode Generator & Scanner</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://unpkg.com/@zxing/library@0.18.6"></script>
+  <style>
+    body {
+      background-color: #e6f7ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #003366;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #0077cc;
+      text-align: center;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    svg {
+      display: block;
+      margin: 10px auto;
+      max-width: 100%;
+    }
+
+    video {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      textarea, input, button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Barcode Generator</h2>
+    <input type="text" id="barcodeInput" placeholder="Enter text or number"/>
+    <button onclick="generateBarcode()">Generate Barcode</button>
+    <svg id="barcode"></svg>
+
+    <hr style="margin:30px 0;">
+
+    <h2>Barcode Scanner</h2>
+    <button onclick="startScan()">Start Scanning</button>
+    <video id="scanner"></video>
+    <p><strong>Scanned Result:</strong> <span id="result">None</span></p>
+  </div>
+
+  <script>
+    function generateBarcode() {
+      const value = document.getElementById("barcodeInput").value.trim();
+      if (!value) return alert("Please enter a value.");
+      JsBarcode("#barcode", value, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 2,
+        height: 100,
+        displayValue: true
+      });
+    }
+
+    function startScan() {
+      const selectedDeviceId = null;
+      const codeReader = new ZXing.BrowserBarcodeReader();
+      const videoElement = document.getElementById('scanner');
+      codeReader
+        .getVideoInputDevices()
+        .then((videoInputDevices) => {
+          const firstDeviceId = videoInputDevices[0].deviceId;
+          return codeReader.decodeFromVideoDevice(firstDeviceId, videoElement, (result, err) => {
+            if (result) {
+              document.getElementById("result").textContent = result.text;
+              codeReader.reset();
+            }
+          });
+        })
+        .catch((err) => console.error(err));
+    }
+  </script>
+</body>
+</html>
