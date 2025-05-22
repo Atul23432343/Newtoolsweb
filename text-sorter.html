@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advanced Text Sorter Tool</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      max-width: 650px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    select, button, label {
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    select, button {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #007bff;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 15px;
+      color: #003366;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    #output {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-size: 16px;
+      color: #003366;
+      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 6px;
+      background: #f0faff;
+      min-height: 150px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    .btn-group button {
+      flex: 1 1 45%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Advanced Text Sorter Tool</h2>
+    <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+    
+    <select id="sortOrder">
+      <option value="asc">Sort A - Z (Ascending)</option>
+      <option value="desc">Sort Z - A (Descending)</option>
+    </select>
+
+    <label><input type="checkbox" id="removeDuplicates"> Remove Duplicate Lines</label>
+    <label><input type="checkbox" id="ignoreCase"> Case-Insensitive Sort</label>
+
+    <button onclick="sortText()">Sort Text</button>
+
+    <div class="btn-group">
+      <button onclick="copyOutput()">Copy Output</button>
+      <button onclick="clearText()">Clear All</button>
+    </div>
+
+    <div id="output" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function sortText() {
+      const input = document.getElementById('inputText').value;
+      const sortOrder = document.getElementById('sortOrder').value;
+      const removeDuplicates = document.getElementById('removeDuplicates').checked;
+      const ignoreCase = document.getElementById('ignoreCase').checked;
+
+      if (!input.trim()) {
+        document.getElementById('output').textContent = 'Please enter some text.';
+        return;
+      }
+
+      let lines = input.split('\n').filter(line => line.trim() !== '');
+
+      if (removeDuplicates) {
+        const seen = new Set();
+        lines = lines.filter(line => {
+          const check = ignoreCase ? line.toLowerCase() : line;
+          return seen.has(check) ? false : seen.add(check);
+        });
+      }
+
+      lines.sort((a, b) => {
+        const valA = ignoreCase ? a.toLowerCase() : a;
+        const valB = ignoreCase ? b.toLowerCase() : b;
+        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      });
+
+      document.getElementById('output').textContent = lines.join('\n');
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert('Output copied to clipboard!');
+      });
+    }
+
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('output').textContent = '';
+      document.getElementById('removeDuplicates').checked = false;
+      document.getElementById('ignoreCase').checked = false;
+    }
+  </script>
+</body>
+</html>
