@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Text Reverser Tool</title>
+  <style>
+    body {
+      background: #e6f7ff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #007bff;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #output {
+      margin-top: 20px;
+      background: #f0faff;
+      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 16px;
+      white-space: pre-wrap;
+      color: #003366;
+      min-height: 100px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .btn-group button {
+      flex: 1 1 45%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Text Reverser Tool</h2>
+    <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+
+    <select id="reverseType">
+      <option value="full">Reverse Full Text</option>
+      <option value="lines">Reverse Each Line</option>
+      <option value="words">Reverse Words in Line</option>
+      <option value="chars">Reverse Characters in Line</option>
+    </select>
+
+    <button onclick="reverseText()">Reverse Text</button>
+
+    <div class="btn-group">
+      <button onclick="copyOutput()">Copy Output</button>
+      <button onclick="clearText()">Clear</button>
+    </div>
+
+    <div id="output" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function reverseText() {
+      const input = document.getElementById('inputText').value;
+      const type = document.getElementById('reverseType').value;
+
+      let result = '';
+      if (!input.trim()) {
+        result = 'Please enter some text.';
+      } else {
+        const lines = input.split('\n');
+
+        if (type === 'full') {
+          result = input.split('').reverse().join('');
+        } else if (type === 'lines') {
+          result = lines.reverse().join('\n');
+        } else if (type === 'words') {
+          result = lines.map(line => line.split(' ').reverse().join(' ')).join('\n');
+        } else if (type === 'chars') {
+          result = lines.map(line => line.split('').reverse().join('')).join('\n');
+        }
+      }
+
+      document.getElementById('output').textContent = result;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert('Output copied to clipboard!');
+      });
+    }
+
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('output').textContent = '';
+    }
+  </script>
+</body>
+</html>
